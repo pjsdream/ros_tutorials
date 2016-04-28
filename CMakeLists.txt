@@ -6,10 +6,19 @@ project(ros_tutorials)
 ## is used, also find other catkin packages
 find_package(catkin REQUIRED COMPONENTS
   roscpp
+  moveit_ros_planning_interface
+  actionlib
+  actionlib
+  control_msgs
+  geometry_msgs
+  nav_msgs
+  roscpp
+  sensor_msgs
+  topic_tools
 )
 
 ## System dependencies are found with CMake's conventions
-# find_package(Boost REQUIRED COMPONENTS system)
+find_package(Boost REQUIRED)
 
 
 ## Uncomment this if the package has a setup.py. This macro ensures
@@ -110,8 +119,9 @@ catkin_package(
 
 ## Specify additional locations of header files
 ## Your package locations should be listed before other locations
-# include_directories(include)
 include_directories(
+  include
+  ${Boost_INCLUDE_DIRS}
   ${catkin_INCLUDE_DIRS}
 )
 
@@ -126,16 +136,22 @@ include_directories(
 # add_dependencies(ros_tutorials ${${PROJECT_NAME}_EXPORTED_TARGETS} ${catkin_EXPORTED_TARGETS})
 
 ## Declare a C++ executable
-# add_executable(ros_tutorials_node src/ros_tutorials_node.cpp)
+add_executable(fetch_move_group src/fetch_move_group.cpp)
+add_executable(fetch_control_head src/fetch_control_head.cpp)
 
 ## Add cmake target dependencies of the executable
 ## same as for the library above
 # add_dependencies(ros_tutorials_node ${${PROJECT_NAME}_EXPORTED_TARGETS} ${catkin_EXPORTED_TARGETS})
 
 ## Specify libraries to link a library or executable target against
-# target_link_libraries(ros_tutorials_node
-#   ${catkin_LIBRARIES}
-# )
+target_link_libraries(fetch_move_group
+  ${catkin_LIBRARIES}
+  ${Boost_LIBRARIES}
+)
+target_link_libraries(fetch_control_head
+  ${Boost_LIBRARIES}
+  ${catkin_LIBRARIES}
+)
 
 #############
 ## Install ##
