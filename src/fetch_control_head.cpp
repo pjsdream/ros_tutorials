@@ -38,7 +38,7 @@ int main(int argc, char** argv)
     double max_acc_pan_, max_acc_tilt_;
     double min_pos_pan_, max_pos_pan_, min_pos_tilt_, max_pos_tilt_;
     std::string head_pan_joint_, head_tilt_joint_;
-    double actual_pos_pan_, actual_pos_tilt_;  // actual positions
+    double actual_pos_pan_ = 0, actual_pos_tilt_ = 0;  // actual positions
     double desired_pan_, desired_tilt_;  // desired velocities
     double last_pan_, last_tilt_;
 
@@ -66,8 +66,9 @@ int main(int argc, char** argv)
       ROS_ERROR("%s may not be connected.", action_name.c_str());
     }
 
+    // set to desired angles
     desired_pan_ = 0;
-    desired_tilt_ = -0.76;
+    desired_tilt_ = 0.7;
 
     ros::Rate rate(30);
 
