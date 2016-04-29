@@ -40,7 +40,7 @@ int main(int argc, char** argv)
     std::string head_pan_joint_, head_tilt_joint_;
     double actual_pos_pan_ = 0, actual_pos_tilt_ = 0;  // actual positions
     double desired_pan_, desired_tilt_;  // desired velocities
-    double last_pan_, last_tilt_;
+    double last_pan_ = 0, last_tilt_ = 0;
 
     pnh.param("button_deadman", deadman_, 8);
     pnh.param("axis_pan", axis_pan_, 0);
@@ -61,14 +61,17 @@ int main(int argc, char** argv)
     std::string action_name = "/head_controller/follow_joint_trajectory";
     boost::shared_ptr<client_t> client_;
     client_.reset(new client_t(action_name, true));
+    ROS_INFO("connecting to actionlib server.");
     if (!client_->waitForServer(ros::Duration(2.0)))
     {
-      ROS_ERROR("%s may not be connected.", action_name.c_str());
+        ROS_ERROR("%s may not be connected.(1)", action_name.c_str());
+        if (!client_->waitForServer(ros::Duration(10.0)))
+            ROS_ERROR("%s may not be connected.(2)", action_name.c_str());
     }
 
-    // set to desired angles
-    desired_pan_ = 0;
-    desired_tilt_ = 0.7;
+    // set to desired angular velocity
+    desired_pan_ = -0.1;
+    desired_tilt_ = -0.1;
 
     ros::Rate rate(30);
 
@@ -105,7 +108,7 @@ int main(int argc, char** argv)
         actual_pos_tilt_ = std::max(min_pos_tilt_, std::min(max_pos_tilt_, actual_pos_tilt_ + tilt_travel));
         last_tilt_ = tilt_vel;
 
-        rate.sleep();
+        //rate.sleep();
     }
 
     return 0;
